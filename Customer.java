@@ -26,6 +26,10 @@ public class Customer {
         }         
     }
 
+    
+    /** 
+     * @return String
+     */
     public String getCreditCardasString() {
         String card = "";
         // if credit card was not valid . no credit card
@@ -37,19 +41,35 @@ public class Customer {
         }
         return card;
     }
+    
+    /** 
+     * @param card
+     */
     public void setCreditCard(int[] card) {
         this.creditCard = new int[card.length];
         this.creditCard = card;
     }
+    
+    /** 
+     * @param code
+     */
     public void setPostalCode(String code) {
         this.postalCode = new char[code.length()];
         for( int i=0;i<code.length();i++){
             this.postalCode[i] = code.charAt(i);
         }
     }
+    
+    /** 
+     * @return String
+     */
     public String getPostalCode(){
         return new String(postalCode);
     }
+    
+    /** 
+     * @return String
+     */
     public String getCustomerNumberAsString(){
         String customerId = "";
         for (int c : customerNumber) {
@@ -58,6 +78,10 @@ public class Customer {
         return customerId;
     }
 
+    
+    /** 
+     * @return String
+     */
     public String toCSV() {
         String csvDelimeter = ",";
         return getCustomerNumberAsString() + csvDelimeter + fistName + csvDelimeter + lastName
@@ -65,14 +89,26 @@ public class Customer {
                + getCreditCardasString();
     }
 
+    
+    /** 
+     * @param fName
+     */
     public void setFirstName(String fName) {
         fistName = fName;
     }
 
+    
+    /** 
+     * @param lname
+     */
     public void setLastName(String lname) {
         lastName = lname;
     }
 
+    
+    /** 
+     * @param city
+     */
     public void setCity(String city) {
         cityName = city;
     }    

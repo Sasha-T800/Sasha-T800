@@ -2,10 +2,14 @@
 /* Class CreditCardValidator
 /* imllement Luhn algorithm
 */
-
 public class CreditCardValidator {
+   
+   /** 
+    * @param card
+    * @return boolean
+    */
    /* the method The Luhn algorithm test is used as a credit card digit test 
-    /*
+    *
     */
     public boolean isValid(int[] card) {
         int[] reversedCard = reverseNumbers(card);
@@ -19,6 +23,11 @@ public class CreditCardValidator {
 
         return false;
     }
+    
+    /** 
+     * @param reversedCard
+     * @return int
+     */
     /* the method Take the second, fourth ... and every other even digits in the reversed digits
     /* Multiply each digit by two and sum the digits, if the answer is greater than 9
         then add the 2 digits to form partial sums for the even digits         
@@ -49,6 +58,11 @@ public class CreditCardValidator {
         }
         return total;
     }
+    
+    /** 
+     * @param reversedCard
+     * @return int
+     */
     /* the method Perform a partial sum of the odd digits
     /*
     */
@@ -61,6 +75,11 @@ public class CreditCardValidator {
         }
         return sum;
     }
+    
+    /** 
+     * @param card
+     * @return int[]
+     */
     /* the method Reverse the order of the digits in the number.
     /*
     */
