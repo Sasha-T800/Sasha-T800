@@ -10,17 +10,25 @@ import javax.swing.JFileChooser;
 
 class CustomerSystem {
     static String fileExtention = ".csv";
-
+    static Scanner reader;
+    
+    /** 
+     * @param args
+     */
     public static void main(String[] args) {
         // Please do not edit any of these variables
-        Scanner reader = new Scanner(System.in);
+        reader = new Scanner(System.in);
         String userInput, enterCustomerOption, generateCustomerOption, exitCondition;
         enterCustomerOption = "1";
         generateCustomerOption = "2";
         exitCondition = "9";
 
         // More variables for the main may be declared in the space below
-        Customer customer = new Customer("Sasha", "Tkachenko", "Toronoto", "L4HR", "23424 2424 23242323");
+        Customer customer = new Customer();
+        customer.setFirstName("Sasha");
+        customer.setLastName("Tkachenko");
+        customer.setPostalCode("L5J");
+        customer.setCity("Woodbridge");
 
         do {
             printMenu(); // Printing out the main menu
@@ -31,11 +39,11 @@ class CustomerSystem {
                 // design the method return
                 // Any necessary variables may be added to this if section, but nowhere else in
                 // the code
-                enterCustomerInfo();
+                enterCustomerInfo(customer);
             } else if (userInput.equals(generateCustomerOption)) {
                 // Only the line below may be editted based on the parameter list and how you
                 // design the method return
-                generateCustomerDataFile(reader, customer);
+                generateCustomerDataFile(customer);
             } else {
                 System.out.println("Please type in a valid option (A number from 1-9)");
             }
@@ -53,12 +61,87 @@ class CustomerSystem {
                 .concat("Enter menu option (1-9)\n"));
     }
 
-    /*
-     * This method may be edited to achieve the task however you like. The method
-     * may not nesessarily be a void return type This method may also be broken down
-     * further depending on your algorithm
+    
+    /**
+     * This method may be edited to achieve the task however you like.
+     * 
+     * The method may not nesessarily be a void return type This method 
+     * may also be broken down further depending on your algorithm 
+     * 
+     * @param customer class Customer consists information 
      */
-    public static void enterCustomerInfo() {
+    public static void enterCustomerInfo(Customer customer) {
+
+        // user suppose to enter first name , last name and postal code here ;
+        // partner
+
+
+
+        //get credit card from user input 
+        int[] cardEntered = getCustomerCreditCard();
+
+        // validate card
+        if (!validateCreditCard(cardEntered)) {
+            System.out.println("The credit card is not valid . Try again");
+            return;
+        }
+
+        System.out.println("The credit card IS GOOOD");
+        customer.setCreditCard(cardEntered);
+    }
+    
+    /** 
+     * This method uses reader for get credit card from input
+     * 
+     * @return int[] credit card digits
+     */
+    public static int[] getCustomerCreditCard() {
+        int[] creditCardNumber;
+        String tempCard = "";
+        do {
+            System.out.println("Please enter credit card digits");
+            tempCard = reader.nextLine();
+
+            // check if customer enter space or nothing
+            if (tempCard.trim().length() == 0) {
+                System.out.println("Credit card can not be empty");
+            } 
+            // check if customer enter 9 or more digits
+            if( tempCard.trim().length() < 9){
+                System.out.println("Credit card must have at least 9 digits");
+                tempCard = "";
+            }
+            // check if customer enter ONLY Digits
+            if( !consistOnlyDigits(tempCard.trim())){
+                System.out.println("Please enter only digits . NO letters or symbols");
+                tempCard = "";
+            }           
+
+        } while (tempCard.trim().length() == 0);
+
+        tempCard = tempCard.trim(); // no spaces
+        creditCardNumber = new int[tempCard.length()];
+        for (int i = 0; i < tempCard.length(); i++) {
+            creditCardNumber[i] = Character.getNumericValue(tempCard.charAt(i));
+        }
+        return creditCardNumber;
+    }
+    
+    /** 
+     * This method check that customer input only numbers
+     * 
+     * @param card String user input from keyboard
+     * @return boolean consists only numbers or not
+     */
+
+    public static boolean consistOnlyDigits(String card){
+        // check them only digit
+        for (int i = 0; i < card.length(); i++) {
+            if (!Character.isDigit(card.charAt(i))) {
+                return false;
+            }
+        }   
+        return true;  
     }
 
     /*
@@ -69,22 +152,43 @@ class CustomerSystem {
     public static void validatePostalCode() {
     }
 
-    /*
-     * This method may be edited to achieve the task however you like. The method
-     * may not nesessarily be a void return type This method may also be broken down
+    
+    /** 
+     * This method may be edited to achieve the task however you like. 
+     * 
+     * The method may not nesessarily be a void return type This method may also be broken down
      * further depending on your algorithm
+     * 
+     * @param creditCard array of digits present credit card
+     * @return boolean if credit card valid or not
      */
-    public static void validateCreditCard() {
+    public static boolean validateCreditCard(int[] creditCard) {
+        if (creditCard == null) {
+            return false;
+        }
+
+        if (creditCard.length == 0) {
+            return false;
+        }
+
+        CreditCardValidator validator = new CreditCardValidator();
+        return validator.isValid(creditCard);
     }
 
-    /*
-     * This method may be edited to achieve the task however you like. The method
-     * may not nesessarily be a void return type This method may also be broken down
+    
+    /** 
+     * This method may be edited to achieve the task however you like.
+     * 
+     * The method may not nesessarily be a void return type This method may also be broken down
      * further depending on your algorithm
+     * 
+     * 
+     * @param customer Class Customer consists information for saving
      */
-    public static void generateCustomerDataFile(Scanner reader, Customer customer) {
-        String location = getSaveFileLocation(reader);
-        String filename = enterFileNameForDataFile(reader, location);
+
+    public static void generateCustomerDataFile(Customer customer) {
+        String location = getSaveFileLocation();
+        String filename = enterFileNameForDataFile(location);
         String filePathName = location + "\\" + filename + fileExtention;
         try {
             // save customer information in define location and file name
@@ -95,11 +199,15 @@ class CustomerSystem {
         } catch (Exception exception) {
             System.out.println("Something goes wrong. Try again. " + exception.getMessage());
         }
-    }
-
-    /*
-     * This method save the customer in specified location and file name
+    }   
+    /** 
+     *  This method save the customer in specified location and file name
+     * 
+     * @param customer Customer class that consist customer information
+     * @param filePathName Sting path to directory and file name
+     * @return boolean success save information or not
      */
+
     private static boolean saveCustomerToFile(Customer customer, String filePathName) {
         // create file
         File fileOut = new File(filePathName);
@@ -117,11 +225,15 @@ class CustomerSystem {
         return false;
     }
 
-    /*
+    
+    /** 
      * This method return location from chosen dialog .Does not allow cancel .always
      * suppose to chose location
+     * 
+     * @return String path to directory where save file
      */
-    private static String getSaveFileLocation(Scanner reader) {
+
+    private static String getSaveFileLocation() {
         File selectedFile = null;
         do {
             // java utils helps to chose location on disk
@@ -139,14 +251,17 @@ class CustomerSystem {
      *******************************************************************/
     /*
      * This method allows to enter file name where save customer information
+     *  
+     * @param savedDirectory String - path to directory where save file
+     * @return String - file name entered by customer
      */
-    private static String enterFileNameForDataFile(Scanner reader, String savedDirectory) {
+    private static String enterFileNameForDataFile(String savedDirectory) {
         String fileName = "";
         do {
             System.out.println("Please enter file name for storing the information");
             fileName = reader.nextLine();
 
-            //validate if file name is not empty
+            // validate if file name is not empty
             if (fileName.trim().length() == 0) {
                 System.out.println("The file name can not be empty");
             }
@@ -160,7 +275,7 @@ class CustomerSystem {
                 }
 
                 // ask customer about override the file
-                if (!canOverrideFile(reader, filePath)) {
+                if (!canOverrideFile()) {
                     fileName = "";
                 }
             }
@@ -169,11 +284,14 @@ class CustomerSystem {
         return fileName;
     }
 
-    /*
+    
+    /** 
      * This method asks customer if file can be override . the method does not exit
      * if user does not give right answer. y for yes and n for no
+     *  
+     * @return boolean - allow override or not
      */
-    public static boolean canOverrideFile(Scanner reader, String filePathName) {
+    public static boolean canOverrideFile() {
         String answer = "";
         do {
             System.out.println("File already exists, ok to overwrite (y/n)? ");
