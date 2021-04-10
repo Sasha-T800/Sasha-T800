@@ -21,6 +21,10 @@ class CustomerSystem {
 
         // More variables for the main may be declared in the space below
         Customer customer = new Customer();
+        customer.setFirstName("Sasha");
+        customer.setLastName("Tkachenko");
+        customer.setPostalCode("L5J");
+        customer.setCity("Woodbridge");
 
         do {
             printMenu(); // Printing out the main menu
@@ -60,11 +64,7 @@ class CustomerSystem {
      */
     public static void enterCustomerInfo(Scanner reader,Customer customer) {
 
-        customer.setFirstName("Sasha");
-        customer.setLastName("Tkachenko");
-        customer.setPostalCode("L5J");
-        customer.setCity("Woodbridge");
-       
+        //only credit card
         int[] cardEntered = getCustomerCreditCard(reader);
 
         if (!validateCreditCard(cardEntered)) {

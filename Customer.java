@@ -28,6 +28,10 @@ public class Customer {
 
     public String getCreditCardasString() {
         String card = "";
+        // if credit card was not valid . no credit card
+        if( creditCard == null){
+            return card;
+        }
         for (int c : creditCard) {
             card = card + Integer.toString(c);
         }
