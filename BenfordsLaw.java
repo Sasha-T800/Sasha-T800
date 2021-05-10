@@ -16,8 +16,6 @@ class BenfordsLaw {
      * @param args
      */
     public static void main(String[] args) {
-        Scanner reader = new Scanner(System.in);
-
         ArrayList<Data> salesDataArray = readCSVDataFromFile();
         if (salesDataArray.size() == 0)
             System.out.println("Have problem to load the sales file ");
@@ -34,23 +32,28 @@ class BenfordsLaw {
         ArrayList<Data> salesDataArray = new ArrayList<Data>();
 
         String appPath = Paths.get("").toAbsolutePath().toString();
-        ;
+        
         String filePath = appPath + "\\sales.csv";
+        // open file sales.csv
         File salesFile = new File(filePath);
         if (!salesFile.exists()) {
             return salesDataArray;
         }
 
         try {
+            // make scanner for read from sales file
             Scanner readerFile = new Scanner(salesFile);
 
-            // readerFile.useDelimiter(",");
             while (readerFile.hasNext()) // returns a boolean value
             {
                 String data = readerFile.next();
+                //check if data is not empty
                 if (!data.isEmpty()) {
+                    // split data for 2 strings
                     String[] splitData = data.split(",");
+                    //check if strings array is length 2 and second string is number 
                     if (splitData.length == 2 && isNumeric(splitData[1])) {
+                        // create instance of Data and add to array
                         Data salesData = new Data(splitData[0], Long.parseLong(splitData[1]));
                         salesDataArray.add(salesData);
                     }
